@@ -114,10 +114,10 @@ namespace Jelle_SSP_2021
 
                 var blobClient = storageAccount.CreateCloudBlobClient();
 
-                var cloudBlobContainer = blobClient.GetContainerReference(id);
+                var cloudBlobContainer = blobClient.GetContainerReference("station-images");
                 await cloudBlobContainer.CreateIfNotExistsAsync();
 
-                string fileName = imageNumber.ToString() + ".jpeg";
+                string fileName = id.ToString() + "/" + imageNumber.ToString() + ".jpeg";
                 var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(fileName);
 
                 await cloudBlockBlob.UploadFromStreamAsync(memoryStream);

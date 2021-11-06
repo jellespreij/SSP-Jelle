@@ -40,18 +40,17 @@ namespace Jelle_SSP_2021
 
             var blobClient = storageAccount.CreateCloudBlobClient();
 
-            var cloudBlobContainer = blobClient.GetContainerReference(id);
+            var cloudBlobContainer = blobClient.GetContainerReference("station-images");
             await cloudBlobContainer.CreateIfNotExistsAsync();
 
-            BlobResultSegment resultSegment = await cloudBlobContainer.ListBlobsSegmentedAsync(string.Empty,
-                true, BlobListingDetails.Metadata, 100, null, null, null);
+            CloudBlobDirectory dir = cloudBlobContainer.GetDirectoryReference(id);
+
+            var resultSegment = dir.ListBlobsSegmentedAsync(true, BlobListingDetails.Metadata, null, null, null, null).Result;
 
             if (resultSegment.Results.Count() != 51)
             {
                 return (IActionResult)new OkObjectResult("Images are still being created " + resultSegment.Results.Count().ToString() + "/51 images done");
             }
-
-            Console.WriteLine(resultSegment.Results.Count());
 
             foreach (var blobItem in resultSegment.Results)
             {
